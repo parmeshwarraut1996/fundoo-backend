@@ -24,7 +24,6 @@ function notificationModel() {}
 
 notificationModel.prototype.pushNotification = (req, callback) => {
   user.findOne({ _id: req.body.userId }, (err, data) => {
-    console.log("in model====>" + req.body.userId);
     if (err) {
       console.log(err);
       return callback(err);
@@ -63,7 +62,6 @@ notificationModel.prototype.pushNotification = (req, callback) => {
   });
 };
 function updateToken(req, callback) {
-  console.log("userId===>" + req.body.userId);
 
   notification.find({ userId: req.body.userId }, (err, data) => {
     if (err) {
