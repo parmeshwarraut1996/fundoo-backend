@@ -3,7 +3,8 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 var jwt = require("jsonwebtoken");
 const Schema = mongoose.Schema;
-
+var key=require('../config/config')
+var nodeMailer=require('../authorization/nodeMailer')
 var validateEmail = function(email) {
   var emailRegex = /^\w+[\w-\.]*\@\w+((-\w+)|(\w*))\.[a-z]{2,3}$/;
   return emailRegex.test(email);
@@ -29,10 +30,12 @@ var userSchema = new Schema({
     type: String,
     required: [true, "Password is required"]
   }
-});
+},{timestamps:true});
 var user = mongoose.model("user", userSchema);
 
-function usermodel() {}
+function usermodel() {
+  
+}
 
 function hash(password, callback) {
   bcrypt.genSalt(saltRounds, function(err, salt) {
@@ -64,6 +67,7 @@ usermodel.prototype.signUp = (req, callback) => {
             email: req.body.email,
             password: resulthash
           });
+          
           newUser.save((error, result) => {
             if (error) {
               console.log("Error in user model ");
@@ -92,11 +96,7 @@ usermodel.prototype.login=(body,callback)=>{
     console.log("email in user body model===>"+body);
 
     user.find({'email':body.email},(err,data)=>{
-        console.log("dtaa in user model====>"+data);
-        console.log("email in user model===>"+body.email);
-        console.log("password in user model===>"+body.password);
-
-        
+               
         if(err){
             return callback(err)
         }
@@ -121,5 +121,38 @@ usermodel.prototype.login=(body,callback)=>{
 
     })
 
+}
+
+usermodel.prototype.forgetPassword=(req,callback)=>{
+  user.find({'email':req.body.email},(err,data)=>{
+    if(err){
+      return callback(err);
+    }
+    else if(data.length>0){
+      console.log("in models"+req.body.email);
+      
+      var token=jwt.sign({email:req.body.email,id:data[0].id},key.API_KEY,{expiresIn:5500077});
+      token="http://localhost:3000/reset/"+token;
+      nodeMailer.sendMail(req.body.email,token);
+
+      return callback(null,req.body.email);
+    }
+    else{
+      return callback("email not exist")
+    }
+
+  })
+
+}
+
+usermodel.prototype.resetPassword=(req,callback)=>{
+        user.update({id:req.tokenData.id},{$set:{password:req.body.password}},function (err,result){
+          if(err){
+            return callback(err)
+          }
+          else{
+            return callback(null,"password updated")
+          }
+        })
 }
 module.exports = new usermodel();
