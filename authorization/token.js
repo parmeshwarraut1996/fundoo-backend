@@ -21,6 +21,8 @@ exports.auth = function(req, res, next) {
 };
 
 exports.userAuth=function(req,res,next){
+  console.log("in auth"+req.body.pin);
+  
   var token=req.headers["token"];
   var errMessage={
     message:"unauthorised user"
@@ -28,6 +30,8 @@ exports.userAuth=function(req,res,next){
 
   jwt.verify(token,key.AUTH_KEY,function(err,tokenData){
     if(err){
+      console.log("in  err auth"+err);
+
       return res.status(108).send({
         err:err,
         message:errMessage

@@ -17,7 +17,7 @@ app.use(expressValidator());
 */
 
 exports.addNote = (req, res) => {
-  // console.log("file=====>  ", req);
+   //console.log("file=====>  ", req.body.userId);
 
   try {
     req.checkBody("title", "title can not empty").notEmpty();
@@ -91,40 +91,55 @@ exports.updateNote = (req, res) => {
 };
 
 exports.isPin = (req, res) => {
-  req.checkBody("_id", "Card index is required").notEmpty();
+  try {
+    req.checkBody("_id", "Card index is required").notEmpty();
 
-  var errors = req.validationErrors();
-  if (errors) {
-    return res.status(400).send(errors);
-  } else {
-    noteService.isPin(req, (err, data) => {
-      if (err) {
-        return res.status(500).send(err);
-      } else {
-        return res.status(200).send(data);
-      }
-    });
+    var errors = req.validationErrors();
+    if (errors) {
+      return res.status(400).send(errors);
+    } else {
+      noteService.isPin(req, (err, data) => {
+        if (err) {
+          return res.status(500).send(err);
+        } else {
+          return res.status(200).send(data);
+        }
+      });
+    }
+    
+  } catch (error) {
+    return res.send(error)
+    
   }
+ 
 };
 
 exports.isArchive = (req, res) => {
-  req.checkBody("_id", "Card index is required").notEmpty();
+  try {
+    req.checkBody("_id", "Card index is required").notEmpty();
 
-  var errors = req.validationErrors();
-  if (errors) {
-    return res.status(400).send(errors);
-  } else {
-    noteService.isArchive(req, (err, data) => {
-      if (err) {
-        return res.status(500).send(err);
-      } else {
-        return res.status(200).send(data);
-      }
-    });
+    var errors = req.validationErrors();
+    if (errors) {
+      return res.status(400).send(errors);
+    } else {
+      noteService.isArchive(req, (err, data) => {
+        if (err) {
+          return res.status(500).send(err);
+        } else {
+          return res.status(200).send(data);
+        }
+      });
+    }
+    
+  } catch (error) {
+    return res.send(error);
+    
   }
+ 
 };
 exports.isTrashed = (req, res) => {
-  req.checkBody("_id", "Card index is required").notEmpty();
+  try {
+    req.checkBody("_id", "Card index is required").notEmpty();
   var errors = req.validationErrors();
 
   if (errors) {
@@ -138,39 +153,93 @@ exports.isTrashed = (req, res) => {
       }
     });
   }
+    
+  } catch (error) {
+    return res.send(error);
+    
+  }
+  
 };
 
 exports.addColor = (req, res) => {
-  req.checkBody("_id", "Card index is required").notEmpty();
+  try {
+    req.checkBody("_id", "Card index is required").notEmpty();
 
-  var errors = req.validationErrors();
-
-  if (errors) {
-    return res.status(400).send(errors);
-  } else {
-    noteService.addColor(req, (err, data) => {
-      if (err) {
-        return res.status(500).send(err);
-      } else {
-        return res.status(200).send(data);
-      }
-    });
+    var errors = req.validationErrors();
+  
+    if (errors) {
+      return res.status(400).send(errors);
+    } else {
+      noteService.addColor(req, (err, data) => {
+        if (err) {
+          return res.status(500).send(err);
+        } else {
+          return res.status(200).send(data);
+        }
+      });
+    }
+    
+  } catch (error) {
+    return res.send(error)
+    
   }
+ 
 };
 
 exports.addReminder = (req, res) => {
-  req.checkBody("_id", "Card index is required").notEmpty();
-  var errors = req.validationErrors();
-
-  if (errors) {
-    return res.status(400).send(errors);
-  } else {
-    noteService.addReminder(req, (err, data) => {
-      if (err) {
-        return res.status(500).send(err);
-      } else {
-        return res.status(200).send(data);
-      }
-    });
+  try {
+    req.checkBody("_id", "Card index is required").notEmpty();
+    var errors = req.validationErrors();
+  
+    if (errors) {
+      return res.status(400).send(errors);
+    } else {
+      noteService.addReminder(req, (err, data) => {
+        if (err) {
+          return res.status(500).send(err);
+        } else {
+          return res.status(200).send(data);
+        }
+      });
+    }
+    
+  } catch (error) {
+    return res.send(error)
+    
   }
+ 
 };
+
+exports.addLabel=(req,res)=>{
+  console.log("in controller==>"+req.body);
+  
+  try {
+    req.checkBody("labels","Labels are required").notEmpty();
+    var errors=req.validationErrors();
+    if(errors){
+      console.log("in errors====>"+errors
+      );
+      
+      return res.status(400).send(errors);
+    }
+    else{
+      var obj={
+        "userId":req.body.userId,
+        "labels":req.body.labels
+      }
+      noteService.addLabel(obj,(err,res)=>{
+        if(err){
+          return res.status(500).send(err);
+        }
+        else{
+          return res.status(200).send(obj)
+        }
+
+      })
+    }
+    
+  } catch (error) {
+    
+  }
+  
+}

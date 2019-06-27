@@ -21,7 +21,6 @@ var noteSchema = new Schema(
     label: {
       type: Array
     },
-
     collaborator: {
       type: Array
     },
@@ -32,13 +31,13 @@ var noteSchema = new Schema(
       type: Boolean
     },
     trashed: {
-      type: String
+      type: Boolean
     },
     userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: 'users'
-    }
+        type:Schema.Types.ObjectId,
+        required: true,
+        ref: 'users'
+       }
   },
   { timestamps: true }
 );
@@ -76,11 +75,6 @@ noteModel.prototype.addNote = (req, callback) => {
         }
       });
 
- 
-
-  
-
-
 };
 noteModel.prototype.updateNote = (req, callback) => {
     console.log("req body id  ");
@@ -109,10 +103,9 @@ noteModel.prototype.isPin=(req,callback)=>{
     Note.findOne({_id:req.body._id},(err,data)=>{
         if(err){
             return callback(err);
-
         }
         else{
-          
+  
           Note.updateOne({_id:req.body._id},{$set:{pin:req.body.pin}},function(err,result){
                 if(err){
                     return callback(err);
@@ -205,5 +198,53 @@ noteModel.prototype.allReminders = (callback) => {
            callback(null,result)
       }
   })
+}
+
+var labelSchema=new Schema({
+
+  userId:{
+    type:Schema.Types.ObjectId,
+    required:true,
+    ref:"users"
+  },
+  label:[String]
+
+},{timestamps:true});
+
+var Label=mongoose.model("Label",labelSchema);
+
+noteModel.prototype.addLabel=(data,callback)=>{
+Label.findOne({"userId":data.userId},(err,res)=>{
+  if(err){
+    return callback(err);
+  }
+  else if(res===null) {
+    var obj={
+      "userId":data.userId,
+      "labels":data.labels
+    }
+    var label=new Label(obj);
+    label.save((err,result)=>{
+      if(err){
+        return callback(err)
+      }
+      else{
+        return callback(null,result)
+      }
+    })
+  }
+  else{
+  Label.findOneAndUpdate({ userId: data.userId }, { $push: { labels: { $each: data.labels } } },(err,res)=>{
+    if(err){
+      return callback(err)
+    }
+    else{
+      return callback(null,res)
+    }
+  })
+
+  }
+
+})
 }
 module.exports = new noteModel();

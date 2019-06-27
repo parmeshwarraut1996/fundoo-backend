@@ -21,7 +21,6 @@ const upload = multer({
     fileFilter: (req, file, callback) => {
         console.log(req);
         
-        console.log("hdgfh  "+file.originalname);
         
         if(file.originalname===undefined||file.originalname===null||file.originalname===''){
             return callback(null,true)

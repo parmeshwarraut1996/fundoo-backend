@@ -16,7 +16,7 @@ app.use(expressValidator());
 
 */
 
-exports.signUp = function(req, res, next) {
+exports.signUp = function(req, res) {
   try {
     req.checkBody("firstName", "first name cannot empty").notEmpty();
     req.checkBody("lastName", "last name can not empty").notEmpty();
@@ -59,7 +59,7 @@ exports.login = (req, res, next) => {
 
       return res.status(404).send(errors);
     } else {
-      console.log("in success", req.body);
+      console.log("in success");
 
       userService.login(req.body, (err, data) => {
         if (err) {
@@ -86,7 +86,7 @@ exports.login = (req, res, next) => {
   }
 };
 
-exports.forgetPassword = (req, res, next) => {
+exports.forgetPassword = (req, res) => {
   console.log("in controller");
 
   try {
