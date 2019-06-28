@@ -24,9 +24,12 @@ exports.userAuth=function(req,res,next){
   console.log("in auth"+req.body.pin);
   
   var token=req.headers["token"];
+  console.log("token"+token);
+  
   var errMessage={
     message:"unauthorised user"
   };
+  
 
   jwt.verify(token,key.AUTH_KEY,function(err,tokenData){
     if(err){
@@ -38,6 +41,8 @@ exports.userAuth=function(req,res,next){
       });
     }
       else{
+        console.log("in success in token===>");
+        
         req.tokenData=tokenData
         next();
       }

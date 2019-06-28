@@ -137,7 +137,7 @@ exports.isArchive = (req, res) => {
   }
  
 };
-exports.isTrashed = (req, res) => {
+exports. isTrashed = (req, res) => {
   try {
     req.checkBody("_id", "Card index is required").notEmpty();
   var errors = req.validationErrors();
