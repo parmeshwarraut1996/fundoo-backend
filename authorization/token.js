@@ -20,18 +20,14 @@ exports.auth = function(req, res, next) {
   });
 };
 
-exports.userAuth=function(req,res,next){
-  console.log("in auth"+req.body.pin);
-  
-  var token=req.headers["token"];
+exports.userAuth=(req,res,next)=>{
+  console.log("in auth  "+req.body.title);
+    var token=req.headers["token"];
   console.log("token"+token);
-  
-  var errMessage={
+    var errMessage={
     message:"unauthorised user"
   };
-  
-
-  jwt.verify(token,key.AUTH_KEY,function(err,tokenData){
+    jwt.verify(token,key.API_KEY,(err,tokenData)=>{
     if(err){
       console.log("in  err auth"+err);
 

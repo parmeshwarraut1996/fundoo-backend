@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "nodemon server.js"
   },
   "author": "Parmeshwar",
   "license": "ISC",
@@ -17,6 +17,7 @@
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^8.0.0",
+    "elasticsearch": "^16.4.0",
     "express": "^4.17.1",
     "express-validator": "^5.3.1",
     "firebase-admin": "^8.0.0",
@@ -28,7 +29,7 @@
     "multer-s3": "^2.9.0",
     "node-schedule": "^1.3.2",
     "nodemailer": "^6.2.1",
-    "nodemon": "^1.19.1",
+    "nodemon": "^1.19.3",
     "socket.io": "^2.2.0",
     "uuid": "^3.3.2"
   }

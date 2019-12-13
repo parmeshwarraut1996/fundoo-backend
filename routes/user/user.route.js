@@ -3,17 +3,17 @@ const cors=require('cors');
 const expressValidator=require('express-validator');
 const userController=require('../../controllers/user.controller')
 const auth=require('../../authorization/token')
-const router=express.Router();
+const userRouter=express.Router();
 
-router.use(cors());
-router.use(expressValidator());
+userRouter.use(cors());
+userRouter.use(expressValidator());
 
-router.post('/signUp',userController.signUp);
-router.post('/login',userController.login);
-router.post('/forgetPassword',userController.forgetPassword);
-router.put('/resetPassword',auth.auth,userController.resetPassword)
+userRouter.post('/signUp',userController.signUp);
+userRouter.post('/login',userController.login);
+userRouter.post('/forgetPassword',userController.forgetPassword);
+userRouter.put('/resetPassword',auth.auth,userController.resetPassword)
 
-module.exports=router;
+module.exports=userRouter;
 
 
 

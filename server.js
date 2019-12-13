@@ -4,7 +4,9 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
 var config = require("./config/config.database");
-var router = require("./routes/note/note.route");
+var noteRouter = require("./routes/note/note.route");
+var userRouter = require("./routes/user/user.route");
+var imageRouter = require("./routes/note/imageUpload");
 const hostname = "127.0.0.1";
 const port = 3000;
 const app = express();
@@ -18,7 +20,9 @@ app.use(
     extended: false
   })
 );
-app.use("/", router);
+app.use("/user", userRouter);
+app.use("/note", noteRouter);
+app.use("/image", imageRouter);
 
 mongoose
   .connect(config.url, {
@@ -35,16 +39,12 @@ mongoose
 app.listen(port, () => {
   console.log("server is running http://" + hostname + ":" + port);
 });
-console.log("date===>"+Date());
-
-
+console.log("date===>" + Date());
 schedule.scheduleJob("*/1 * * * *", () => {
-  service.currentReminders((res) => {
-    console.log("res===>"+res.length);
+  service.currentReminders(res => {
+    console.log("res===>" + res.length);
     console.log("err in server + ");
-    
-    
-    if (res===null) {
+    if (res === null) {
       console.log("server not working");
     } else {
       if (res.length == 0) {
@@ -53,18 +53,14 @@ schedule.scheduleJob("*/1 * * * *", () => {
         console.log("caught some reminders");
         for (let i = 0; i < res.length; i++) {
           console.log(res[i]);
-          
           service.buidReminderObj(res[i], (err, result) => {
-            console.log('data after build ',result);
-            
+            console.log("data after build ", result);
             if (err) {
               console.log("can't process further, due to some error....");
               console.log(err);
             } else {
-             
-              
               if (result.firebaseToken) {
-                console.log("in result====>"+result.email);
+                console.log("in result====>" + result.email);
                 objPushnotification.throwPushMessage(result.firebaseToken, {
                   notification: {
                     title: result.title,
@@ -72,7 +68,6 @@ schedule.scheduleJob("*/1 * * * *", () => {
                   }
                 });
               }
-
               objPushnotification.throwIntoMail(result.email, {
                 title: result.title,
                 description: result.description

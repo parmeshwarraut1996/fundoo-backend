@@ -24,8 +24,7 @@ module.exports = {
   },
 
   throwIntoMail(email, data) {
-    console.log('data into mail',email);
-    
+    console.log("data into mail", email);
     const mailOptions = {
       from: "parmeshwarraut1996@gmail.com",
       to: email,
@@ -35,7 +34,6 @@ module.exports = {
     nodemailer
       .createTransport({
         service: "Gmail",
-        
         auth: {
           user: "parmeshwarraut1996@gmail.com",
           pass: "Parmeshwar@55"

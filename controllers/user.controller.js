@@ -4,7 +4,7 @@ var express = require('express');
 var key = require("../config/config");
 var expressValidator=require('express-validator');
 var bodyParser = require('body-parser');
-
+var noteController=require('./note.controller')
 var app = express();
 app.use(bodyParser.urlencoded({ extended: true })); 
 app.use(expressValidator());
@@ -41,7 +41,7 @@ exports.signUp = function(req, res) {
     res.send(error);
   }
 };
-exports.login = (req, res, next) => {
+exports.login = (req, res) => {
   console.log("in controller" + req.body.email);
 
   try {
@@ -49,18 +49,13 @@ exports.login = (req, res, next) => {
     req.checkBody("email", "email cannot empty").notEmpty();
     req.checkBody("password", "password cannot empty").notEmpty();
     req.sanitize("email").normalizeEmail({ remove_dots: false });
-    console.log("in controllervdfsgfd====>  " + req.body.email);
-
     var errors = req.validationErrors();
     console.log("error" + errors);
-
     if (errors) {
       console.log("in error");
-
       return res.status(404).send(errors);
     } else {
       console.log("in success");
-
       userService.login(req.body, (err, data) => {
         if (err) {
           console.log("err in login===>" + err);
@@ -72,7 +67,8 @@ exports.login = (req, res, next) => {
             key.API_KEY,
             { expiresIn: 5500077 }
           );
-
+          console.log("res ",data[0].id);
+          noteController.createIndex(data[0].id)
           return res.status(200).send({
             data: data,
             message: "successfully login",
@@ -173,4 +169,9 @@ exports.reminderToken=(req,res)=>{
       }
     })
   }
+}
+
+exports.setRedis=(data,res)=>{
+  
+
 }
